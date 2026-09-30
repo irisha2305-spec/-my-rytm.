@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Мій ритм — турбота про себе",
+  "short_name": "Мій ритм",
+  "description": "Цілі, вага, обміри, звички, тренування та харчування.",
+  "lang": "uk",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff5f8",
+  "theme_color": "#b54877",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
