@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b54877">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Мій ритм">
+<meta name="description" content="Особисті цілі, вага, звички, харчування та тренування.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Мій ритм ♡</title>
+<style>
+*{box-sizing:border-box}
+:root{font-family:system-ui,-apple-system,sans-serif;color:#543649;background:#fff5f8}
+body{margin:0;padding-bottom:env(safe-area-inset-bottom)}
+button,input,select{font:inherit}
+button{cursor:pointer;min-height:44px;touch-action:manipulation}
+button:focus-visible,summary:focus-visible{outline:3px solid #b54877;outline-offset:3px}
+header{padding:18px max(5%,18px);background:#fff;border-bottom:1px solid #f2dce5;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:25px;font-weight:850;color:#b54877}
+small,.muted{color:#947685;font-size:13px}
+main{max-width:1120px;margin:auto;padding:24px 18px}
+.hero{padding:30px;border-radius:26px;background:linear-gradient(120deg,#a63e6d,#d979a0);color:white;position:relative;overflow:hidden}
+.hero:after{content:"♡";position:absolute;right:20px;top:-28px;font-size:180px;opacity:.12;pointer-events:none}
+.hero small{color:#ffe4ef;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,42px);margin:12px 0}
+.hero p{line-height:1.6;max-width:650px;color:#ffe8f1;margin-bottom:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.stat,.panel{background:white;border:1px solid #f0dce5;border-radius:20px;padding:22px}
+.stat strong{display:block;font-size:26px;color:#b54877;margin:8px 0}
+nav{display:flex;gap:8px;overflow:auto;margin:24px 0;padding:3px 3px 8px}
+nav button{white-space:nowrap;background:white;border:1px solid #efd5e0;color:#8b5770;border-radius:28px;padding:10px 18px}
+nav button.active{background:#b54877;color:white;border-color:#b54877}
+[hidden]{display:none!important}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.stack{display:grid;gap:20px}
+.panel h2{font-size:21px;margin:0 0 18px}
+h3{font-size:16px;margin:0 0 7px}
+p{line-height:1.6}
+form{display:grid;gap:13px}
+label{display:grid;gap:6px;font-size:13px;font-weight:600}
+input,select{width:100%;min-width:0;border:1px solid #eaceda;border-radius:11px;padding:12px;background:#fffafd;color:#543649;min-height:46px}
+input:focus,select:focus{outline:2px solid #d979a0;outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.primary{background:#b54877;color:white;border:0;border-radius:12px;padding:12px 18px;font-weight:700}
+.secondary{background:#fceaf2;color:#a3406c;border:0;border-radius:10px;padding:10px 14px}
+.danger{background:transparent;border:0;color:#a56480;padding:8px 12px}
+.head,.flex{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.head{margin-bottom:18px}
+.head h2{margin:0}
+.item{border-top:1px solid #f4e5ec;padding:16px 0}
+.track{height:10px;background:#f9e5ee;border-radius:8px;overflow:hidden;margin:13px 0}
+.fill{height:100%;background:#da80a5;border-radius:8px;transition:width .25s}
+.badge{background:#fceaf2;color:#a3406c;padding:6px 10px;border-radius:20px;font-size:12px;white-space:nowrap}
+.empty{color:#947685;font-size:14px;line-height:1.6;padding:12px 0}
+.callout{background:#fff2f7;border-radius:14px;padding:16px;line-height:1.6;margin-bottom:16px}
+.chart{width:100%;height:auto;display:block;margin:14px 0}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #f4e5ec}
+th{color:#947685;font-weight:500}
+.habit{width:100%;display:flex;gap:12px;align-items:center;text-align:left;border:1px solid #efdce5;background:#fffafd;color:#543649;border-radius:14px;padding:14px;margin:8px 0}
+.habit.done{background:#fce6ef;border-color:#d979a0}
+.check{width:26px;height:26px;border:1px solid #dca3bc;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.done .check{background:#b54877;color:#fff}
+.awards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.award{background:#fff1f7;border:1px solid #f0d3e0;border-radius:16px;padding:16px}
+.award b{display:block;font-size:14px;margin:8px 0}
+.award.locked{background:#faf7f9;border-style:dashed}
+.award .symbol{font-size:28px}
+details{margin-top:18px}
+summary{cursor:pointer;color:#a3406c;padding:10px 0}
+details p,details li{font-size:13px;line-height:1.7}
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#947685}
+dialog{border:0;border-radius:22px;padding:25px;width:min(440px,calc(100% - 28px));color:#543649;max-height:90vh;overflow:auto}
+dialog
+dialog h2{margin-top:0}
+.actions{display:flex;justify-content:flex-end;gap:10px}
+#notice{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#8f365e;color:white;padding:14px 20px;border-radius:14px;max-width:92vw;z-index:10;box-shadow:0 8px 25px #54364925}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero{padding:25px}header small{display:none}.panel{padding:19px}.head{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">мій ритм ♡</div>
+<small id="connection">Особистий простір для прогресу</small>
+</header>
+<main>
+<section class="hero">
+<small id="greeting">Крок за кроком</small>
+<h1>Твій прогрес починається сьогодні.</h1>
+<p id="motivation">Невелика дія сьогодні важливіша за ідеальний план на потім.</p>
+</section>
+
+<section class="stats" aria-label="Підсумки">
+<div class="stat"><span class="muted">Остання вага</span><strong id="lastWeight">—</strong><span class="muted" id="weightChange">Додайте перший запис</span></div>
+<div class="stat"><span class="muted">Днів регулярності</span><strong id="streak">0</strong><span class="muted">Хоча б одна звичка щодня</span></div>
+<div class="stat"><span class="muted">Тренувань за 7 днів</span><strong id="weekly">0</strong><span class="muted" id="minutes">0 хв активності</span></div>
+<div class="stat"><span class="muted">Нагороди</span><strong id="awardCount">0</strong><span class="muted" id="completed">0 досягнутих цілей</span></div>
+</section>
+
+<nav aria-label="Розділи">
+<button class="active" data-tab="home" aria-pressed="true">♡ Мій день</button>
+<button data-tab="goals" aria-pressed="false">◎ Цілі</button>
+<button data-tab="body" aria-pressed="false">↝ Вага й обміри</button>
+<button data-tab="activity" aria-pressed="false">↗ Активність</button>
+<button data-tab="food" aria-pressed="false">◷ Харчування</button>
+</nav>
+
+<section id="view-home" class="view">
+<div class="grid">
+<div class="stack">
+<section class="panel">
+<div class="head"><h2>Маленькі кроки сьогодні</h2><span class="badge" id="habitCount">0 / 3</span></div>
+<p class="muted" id="todayLabel"></p>
+<div id="habits"></div>
+<div class="callout" id="dailyMessage" style="margin-top:16px;margin-bottom:0"></div>
+</section>
+<section class="panel">
+<h2>Тиждень у твоєму ритмі</h2>
+<div id="weekSummary" class="callout"></div>
+<p class="muted">Дні з відміченими звичками за останні 7 днів</p>
+<div id="habitWeek" class="flex"></div>
+</section>
+</div>
+<div class="stack">
+<section class="panel">
+<h2>Твоя колекція нагород</h2>
+<div id="awards" class="awards"></div>
+<p class="muted">Отримані нагороди залишаються з вами, навіть якщо прогрес зміниться.</p>
+</section>
+<section class="panel">
+<h2>Додаток і збереження</h2>
+<p class="muted" id="installStatus"></p>
+<div class="tools">
+<button class="secondary" id="export">Зберегти копію</button>
+<button class="secondary" id="import">Відновити копію</button>
+</div>
+<input id="importFile" type="file" accept=".json,application/json" hidden>
+<details>
+<summary>Як встановити на iPad</summary>
+<ol>
+<li>Збережіть чотири файли цієї версії в одну папку: <b>index.html</b>, <b>manifest.webmanifest</b>, <b>sw.js</b> і <b>icon.svg</b>.</li>
+<li>Розмістіть цю папку на статичному хостингу з HTTPS, наприклад GitHub Pages або Netlify. Вікно OneCompiler підходить для попереднього перегляду.</li>
+<li>Відкрийте адресу сайту безпосередньо в Safari.</li>
+<li>Натисніть «Поділитися» → «На початковий екран» → «Додати». Якщо є перемикач «Відкривати як вебдодаток», увімкніть його.</li>
+<li>Відкрийте додаток із нової іконки з інтернетом один раз і дочекайтеся повідомлення про готовність офлайн.</li>
+</ol>
+<p>Перед переходом із редактора або Safari до встановленого додатка збережіть копію даних, а потім відновіть її в додатку: сховище може відрізнятися.</p>
+</details>
+<details>
+<summary>Де зберігаються мої записи?</summary>
+<p>На цьому пристрої, у сховищі браузера або встановленого вебдодатка. Автоматичної синхронізації немає. Очищення даних сайту може видалити записи, тому час від часу зберігайте копію у «Файли» на iPad.</p>
+<p>Відновлення копії замінює поточні записи. Перед ним можна експортувати наявні дані.</p>
+</details>
+</section>
+</div>
+</div>
+</section>
+
+<section id="view-goals" class="view panel" hidden>
+<div class="head"><h2>Мої фітнес-цілі</h2><button class="primary" id="addGoal">+ Додати ціль</button></div>
+<p class="muted">Нагороди на 25%, 50% і 100% кожної цілі. Обирайте те, що можете регулярно виконувати.</p>
+<div id="goals"></div>
+</section>
+
+<section id="view-body" class="view" hidden>
+<div class="grid">
+<section class="panel">
+<h2>Вага й обміри</h2>
+<p class="muted">Достатньо ваги або одного обміру. Обміри — у сантиметрах.</p>
+<form id="bodyForm">
+<label>Дата<input name="date" type="date" required></label>
+<label>Вага, кг<input name="weight" type="number" min="1" max="1000" step="0.1" placeholder="Наприклад, 65.5"></label>
+<div class="row">
+<label>Груди, см<input name="chest" type="number" min="1" max="500" step="0.1"></label>
+<label>Талія, см<input name="waist" type="number" min="1" max="500" step="0.1"></label>
+</div>
+<label>Стегна, см<input name="hips" type="number" min="1" max="500" step="0.1"></label>
+<button class="primary">Зберегти вимірювання</button>
+</form>
+<p class="muted">Запис на ту саму дату оновить лише заповнені показники. Для порівняння зручно вимірюватися в подібних умовах.</p>
+</section>
+<section class="panel">
+<h2>Моя цільова вага</h2>
+<div id="weightPlan"></div>
+<form id="weightGoalForm">
+<label>Бажана вага, кг<input name="target" type="number" min="1" max="1000" step="0.1" required></label>
+<button class="secondary">Почати нову ціль від останньої ваги</button>
+</form>
+<p class="muted">Термін і темп не задаються автоматично. Ціль має відповідати вашому здоров’ю та самопочуттю; щоденні коливання ваги природні.</p>
+</section>
+</div>
+<section class="panel" style="margin-top:20px">
+<h2>Історія зміни ваги</h2>
+<div id="weightSummary" class="callout"></div>
+<div id="weightChart"></div>
+<p class="muted">Лінія з’єднує ваші записи за датами. Пунктир позначає поточну ціль.</p>
+</section>
+<section class="panel" style="margin-top:20px">
+<h2>Історія обмірів</h2>
+<div id="bodyHistory" class="scroll"></div>
+</section>
+</section>
+
+<section id="view-activity" class="view" hidden>
+<div class="grid">
+<section class="panel">
+<h2>Записати тренування</h2>
+<form id="workoutForm">
+<label>Активність<select name="type"><option>Силове тренування</option><option>Біг</option><option>Ходьба</option><option>Йога</option><option>Велосипед</option><option>Плавання</option><option>Пілатес</option><option>Інша активність</option></select></label>
+<div class="row">
+<label>Тривалість, хв<input name="duration" type="number" min="1" max="1440" required placeholder="30"></label>
+<label>Дата<input name="date" type="date" required></label>
+</div>
+<button class="primary">Зберегти тренування</button>
+</form>
+<p class="muted">Дні відпочинку також потрібні. Нагороди залежать від кількості записаних тренувань, а не від їхньої інтенсивності.</p>
+</section>
+<section class="panel">
+<h2>Активність за 7 днів</h2>
+<div id="activityChart"></div>
+<div id="activitySummary" class="callout"></div>
+</section>
+</div>
+<section class="panel" style="margin-top:20px"><h2>Журнал тренувань</h2><div id="workouts"></div></section>
+</section>
+
+<section id="view-food" class="view" hidden>
+<div class="grid">
+<section class="panel">
+<h2>Додати прийом їжі</h2>
+<form id="foodForm">
+<label>Дата<input name="date" type="date" required></label>
+<label>Прийом їжі<select name="meal"><option>Сніданок</option><option>Обід</option><option>Вечеря</option><option>Перекус</option></select></label>
+<label>Що їли?<input name="title" required maxlength="120" placeholder="Наприклад, омлет і тост"></label>
+<div class="row">
+<label>Калорії, ккал<input name="calories" type="number" min="0" max="20000" step="1" placeholder="Необов’язково"></label>
+<label>Білок, г<input name="protein" type="number" min="0" max="2000" step="0.1" placeholder="Необов’язково"></label>
+</div>
+<button class="primary">Зберегти прийом їжі</button>
+</form>
+<p class="muted">Можна вести щоденник без підрахунків. Нагород за пропуск їжі або низьку калорійність немає.</p>
+</section>
+<section class="panel">
+<h2>Щоденник харчування</h2>
+<label>Дата<input id="foodDate" type="date"></label>
+<div id="foodSummary" class="callout" style="margin-top:16px"></div>
+<div id="foodHistory"></div>
+</section>
+</div>
+</section>
+</main>
+
+<footer>Мій ритм ♡ · Регулярність важливіша за поспіх</footer>
+
+<dialog id="goalDialog">
+<h2>Нова ціль</h2>
+<form id="goalForm">
+<label>Назва<input name="title" required maxlength="80" placeholder="Виконати 12 тренувань"></label>
+<div class="row">
+<label>Цільове значення<input name="target" type="number" min="0.1" step="any" required></label>
+<label>Одиниця<input name="unit" required maxlength="20" placeholder="тренувань"></label>
+</div>
+<label>До якої дати<input name="deadline" type="date" required></label>
+<div class="actions"><button type="button" class="secondary" data-close="goalDialog">Скасувати</button><button class="primary">Створити</button></div>
+</form>
+</dialog>
+
+<dialog id="progressDialog">
+<h2>Оновити прогрес</h2>
+<form id="progressForm">
+<label>Поточне значення<input name="value" type="number" min="0" step="any" required></label>
+<div class="actions"><button type="button" class="secondary" data-close="progressDialog">Скасувати</button><button class="primary">Зберегти</button></div>
+</form>
+</dialog>
+
+<div id="notice" role="status" aria-live="polite" hidden></div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const KEY="rytm-fitness-v1";
+let state=fresh(),editingId=null,timer;
+function fresh(){
+ return {goals:[],workouts:[],body:[],food:[],habits:{},awards:[],weightPlan:null};
+}
+function day(d=new Date()){
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+const today=()=>day();
+function shiftDay(value,amount){
+ const d=new Date(value+"T12:00:00");d.setDate(d.getDate()+amount);return day(d);
+}
+const lastDays=n=>Array.from({length:n},(_,i)=>shiftDay(today(),i-n+1));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num=n=>Number(n).toLocaleString("uk-UA",{maximumFractionDigits:1});
+const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("uk-UA",{day:"numeric",month:"short",year:"numeric"});
+const shortDate=d=>new Date(d+"T12:00:00").toLocaleDateString("uk-UA",{day:"numeric",month:"numeric"});
+const signed=n=>(n>0?"+":"")+num(n);
+const uid=()=>globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
+const empty=s=>`<p class="empty">${s}</p>`;
+const habitNames=["Рух у комфортному темпі","Регулярне харчування","Час для відновлення"];
+function validDate(s){
+ if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
+ const d=new Date(s+"T12:00:00");return !isNaN(d)&&day(d)===s;
+}
+const validId=s=>typeof s==="string"&&/^[a-zA-Z0-9_-]{1,100}$/.test(s);
+const text=(s,n)=>typeof s==="string"&&s.trim().length>0&&s.length<=n;
+const finite=(v,min,max)=>typeof v==="number"&&Number.isFinite(v)&&v>=min&&v<=max;
+const optional=(v,min,max)=>v===null||v===undefined||finite(v,min,max);
+function validate(raw){
+ if(!raw||typeof raw!=="object"||Array.isArray(raw))throw Error("Невірний формат");
+ const result=fresh();
+ for(const name of ["goals","workouts","body","food"]){
+  const entries=raw[name]??[];
+  if(!Array.isArray(entries)||entries.length>20000)throw Error("Невірні записи");
+  const ids=new Set();
+  for(const r of entries){
+   if(!r||!validId(r.id)||ids.has(r.id))throw Error("Невірний запис");
+   ids.add(r.id);
+   if(name==="goals"){
+    if(!text(r.title,80)||!text(r.unit,20)||!finite(r.target,.000001,1e12)||!finite(r.current,0,1e12)||!validDate(r.deadline))throw Error("Невірна ціль");
+    result.goals.push({id:r.id,title:r.title,unit:r.unit,target:r.target,current:r.current,deadline:r.deadline});
+   }else{
+    if(!validDate(r.date))throw Error("Невірна дата");
+    if(name==="workouts"){
+     if(!text(r.type,80)||!finite(r.duration,1,1440))throw Error("Невірне тренування");
+     result.workouts.push({id:r.id,type:r.type,duration:r.duration,date:r.date});
+    }
+    if(name==="body"){
+     if(!optional(r.weight,1,1000)||["chest","waist","hips"].some(k=>!optional(r[k],1,500)))throw Error("Невірні вимірювання");
+     result.body.push({id:r.id,date:r.date,weight:r.weight??null,chest:r.chest??null,waist:r.waist??null,hips:r.hips??null});
+    }
+    if(name==="food"){
+     if(!text(r.title,120)||!text(r.meal,40)||!optional(r.calories,0,20000)||!optional(r.protein,0,2000))throw Error("Невірне харчування");
+     result.food.push({id:r.id,date:r.date,title:r.title,meal:r.meal,calories:r.calories??null,protein:r.protein??null});
+    }
+   }
+  }
+ }
+ if(raw.habits){
+  if(typeof raw.habits!=="object"||Array.isArray(raw.habits))throw Error("Невірні звички");
+  for(const [date,values] of Object.entries(raw.habits)){
+   if(!validDate(date)||!Array.isArray(values)||values.length!==3||values.some(v=>typeof v!=="boolean"))throw Error("Невірні звички");
+   result.habits[date]=values;
+  }
+ }
+ if(raw.awards){
+  if(!Array.isArray(raw.awards)||raw.awards.length>100000)throw Error("Невірні нагороди");
+  const ids=new Set();
+  for(const a of raw.awards){
+   if(!validId(a.id)||ids.has(a.id)||!text(a.title,200)||!text(a.symbol,10)||!validDate(a.date))throw Error("Невірна нагорода");
+   ids.add(a.id);result.awards.push({id:a.id,title:a.title,symbol:a.symbol,date:a.date});
+  }
+ }
+ if(raw.weightPlan){
+  const p=raw.weightPlan;
+  if(!validId(p.id)||!finite(p.start,1,1000)||!finite(p.target,1,1000)||p.start===p.target||!validDate(p.date))throw Error("Невірна ціль ваги");
+  result.weightPlan={id:p.id,start:p.start,target:p.target,date:p.date};
+ }
+ return result;
+}
+let loadError=false;
+try{
+ const raw=localStorage.getItem(KEY);
+ if(raw)state=validate(JSON.parse(raw));
+}catch{loadError=true;}
+function notify(message){
+ $("notice").textContent=message;$("notice").hidden=false;
+ clearTimeout(timer);timer=setTimeout(()=>$("notice").hidden=true,6000);
+}
+function weights(){
+ return [...state.body].filter(r=>r.weight!=null).sort((a,b)=>a.date.localeCompare(b.date));
+}
+function streak(){
+ let cursor=today(),count=0;
+ const has=d=>state.habits[d]?.some(Boolean);
+ if(!has(cursor))cursor=shiftDay(cursor,-1);
+ while(has(cursor)){count++;cursor=shiftDay(cursor,-1);}
+ return count;
+}
+function bestStreak(){
+ const dates=Object.keys(state.habits).filter(d=>state.habits[d].some(Boolean)).sort();
+ let best=0,current=0,previous=null;
+ for(const d of dates){
+  current=previous&&shiftDay(previous,1)===d?current+1:1;
+  best=Math.max(best,current);previous=d;
+ }
+ return best;
+}
+function planProgress(){
+ const p=state.weightPlan,records=weights().filter(r=>p&&r.date>=p.date);
+ if(!p||!records.length)return null;
+ const current=records.at(-1).weight;
+ const progress=(current-p.start)/(p.target-p.start)*100;
+ return {current,percent:Math.max(0,Math.min(100,progress)),remaining:Math.max(0,(p.target>p.start?p.target-current:current-p.target))};
+}
+function unlockAwards(){
+ const added=[];
+ const grant=(id,title,symbol)=>{
+  if(state.awards.some(a=>a.id===id))return;
+  const award={id,title,symbol,date:today()};
+  state.awards.push(award);added.push(award);
+ };
+ state.goals.forEach(g=>{
+  for(const percent of [25,50,100])
+   if(g.current/g.target*100>=percent)
+    grant(`goal-${g.id}-${percent}`,`${percent===100?"Ціль досягнута":percent+"% шляху"}: ${g.title}`,percent===100?"🏆":percent===50?"🌷":"🌱");
+ });
+ for(const count of [1,5,10,25,50])
+  if(state.workouts.length>=count)grant("workouts-"+count,`${count} ${count===1?"тренування":"тренувань"} у щоденнику`,"✨");
+ for(const count of [3,7,14,30])
+  if(bestStreak()>=count)grant("streak-"+count,`${count} днів регулярності`,"🌸");
+ if(state.body.length)grant("body-first","Перший крок: вимірювання","♡");
+ if(state.food.length)grant("food-first","Перший запис харчування","🍓");
+ const progress=planProgress();
+ if(progress)for(const percent of [25,50,100])
+  if(progress.percent>=percent)grant(`weight-${state.weightPlan.id}-${percent}`,percent===100?"Цільова вага: досягнуто":`${percent}% шляху до цільової ваги`,percent===100?"🏆":"🎀");
+ return added;
+}
+function save(message){
+ const added=unlockAwards();
+ let persisted=true;
+ try{localStorage.setItem(KEY,JSON.stringify(state));}
+ catch{persisted=false;}
+ render();
+ if(!persisted)notify("Записи залишилися на сторінці, але не збереглися у браузері. Збережіть резервну копію.");
+ else if(added.length)notify("Нова нагорода: "+added[0].title+(added.length>1?` · ще ${added.length-1}`:"")+" ♡");
+ else if(message)notify(message);
+ return persisted;
+}
+function resetDates(form){
+ form.querySelectorAll('input[type="date"]').forEach(input=>{input.value=today();input.max=today();});
+}
+["bodyForm","workoutForm","foodForm"].forEach(name=>resetDates($(name)));
+$("foodDate").value=today();
+document.querySelectorAll("[data-tab]").forEach(button=>button.onclick=()=>{
+ document.querySelectorAll("[data-tab]").forEach(b=>{
+  const active=b===button;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active));
+ });
+ document.querySelectorAll(".view").forEach(v=>v.hidden=v.id!=="view-"+button.dataset.tab);
+});
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).close());
+$("addGoal").onclick=()=>$("goalDialog").showModal();
+
+function render(){
+ const records=weights();
+ $("lastWeight").textContent=records.length?num(records.at(-1).weight)+" кг":"—";
+ $("weightChange").textContent=records.length>1?signed(records.at(-1).weight-records[0].weight)+" кг від першого запису":records.length?"Перший запис збережено":"Додайте перший запис";
+ $("streak").textContent=streak();
+ const dates=lastDays(7),recent=state.workouts.filter(w=>dates.includes(w.date));
+ const minutes=recent.reduce((s,w)=>s+w.duration,0);
+ $("weekly").textContent=recent.length;
+ $("minutes").textContent=num(minutes)+" хв активності";
+ $("awardCount").textContent=state.awards.length;
+ $("completed").textContent=state.goals.filter(g=>g.current>=g.target).length+" досягнутих цілей";
+ const quotes=[
+ "Невелика дія сьогодні важливіша за ідеальний план на потім.",
+ "Повернутися до своєї звички — теж прогрес.",
+ "Відпочинок допомагає продовжувати. Обери комфортний крок.",
+ "Твоя дисципліна зростає з маленьких повторюваних дій.",
+ "Помічай не лише цифри: енергію, силу й самопочуття також."
+ ];
+ const quoteIndex=Math.floor(new Date(today()+"T12:00:00").getTime()/86400000)%quotes.length;
+ $("motivation").textContent=quotes[quoteIndex];
+ $("greeting").textContent=new Date().toLocaleDateString("uk-UA",{weekday:"long",day:"numeric",month:"long"});
+ renderHome();renderGoals();renderBody();renderActivity(dates,recent,minutes);renderFood();
+}
+function renderHome(){
+ const values=state.habits[today()]||[false,false,false],count=values.filter(Boolean).length;
+ $("todayLabel").textContent=fmt(today())+" · відмічайте лише те, що вже зробили";
+ $("habitCount").textContent=count+" / 3";
+ $("habits").innerHTML=habitNames.map((name,i)=>`<button class="habit ${values[i]?"done":""}" data-habit="${i}" aria-pressed="${values[i]}"><span class="check" aria-hidden="true">${values[i]?"✓":""}</span><span>${name}</span></button>`).join("");
+ $("dailyMessage").textContent=count===3?"Усі три кроки відмічено. Час помітити свої зусилля й відпочити ♡":count?"Сьогодні вже є крок до регулярності. Наступний — у комфортному темпі.":"Обери один посильний крок. Не потрібно робити все одразу.";
+ const days=lastDays(7),habitDays=days.filter(d=>state.habits[d]?.some(Boolean)).length;
+ const measurementDays=state.body.filter(r=>days.includes(r.date)).length;
+ const foodDays=new Set(state.food.filter(f=>days.includes(f.date)).map(f=>f.date)).size;
+ $("weekSummary").textContent=`Звички: ${habitDays} із 7 днів · харчування записано у ${foodDays} дні · вимірювань: ${measurementDays}.`;
+ $("habitWeek").innerHTML=days.map(d=>{
+  const done=state.habits[d]?.some(Boolean);
+  return `<div style="text-align:center"><span class="badge" style="display:inline-block;background:${done?"#b54877":"#fceaf2"};color:${done?"white":"#a3406c"}" aria-label="${fmt(d)}: ${done?"звичку виконано":"без відмітки"}">${done?"✓":"·"}</span><div class="muted" style="margin-top:6px">${new Date(d+"T12:00:00").toLocaleDateString("uk-UA",{weekday:"short"})}</div></div>`;
+ }).join("");
+ const earned=[...state.awards].reverse();
+ const previews=[
+ {id:"workouts-1",title:"Перше тренування",symbol:"✨",hint:"Запишіть одне тренування"},
+ {id:"streak-3",title:"3 дні регулярності",symbol:"🌸",hint:"Хоча б одна звичка 3 дні поспіль"},
+ {id:"streak-7",title:"Тиждень регулярності",symbol:"🌷",hint:"Хоча б одна звичка 7 днів поспіль"},
+ {id:"workouts-10",title:"10 тренувань",symbol:"🎀",hint:"У власному темпі"}
+ ].filter(p=>!earned.some(a=>a.id===p.id));
+ $("awards").innerHTML=earned.slice(0,6).map(a=>`<div class="award"><span class="symbol" aria-hidden="true">${esc(a.symbol)}</span><b>${esc(a.title)}</b><small>Отримано ${fmt(a.date)}</small></div>`).join("")+
+ previews.slice(0,Math.max(0,4-Math.min(earned.length,4))).map(a=>`<div class="award locked"><span class="symbol" aria-hidden="true">${a.symbol}</span><b>${a.title}</b><small>${a.hint}</small></div>`).join("");
+ if(earned.length>6)$("awards").innerHTML+=`<details style="grid-column:1/-1"><summary>Ще ${earned.length-6} нагород</summary>${earned.slice(6).map(a=>`<p>${esc(a.symbol)} ${esc(a.title)} <small>· ${fmt(a.date)}</small></p>`).join("")}</details>`;
+}
+function renderGoals(){
+ $("goals").innerHTML=state.goals.length?state.goals.map(g=>{
+  const percent=Math.min(100,Math.max(0,g.current/g.target*100));
+  const deadline=g.deadline<today()&&percent<100?"Дата цілі минула · можна продовжувати":"До "+fmt(g.deadline);
+  return `<article class="item"><div class="flex"><div><h3>${esc(g.title)}</h3><small>${deadline}</small></div><span class="badge">${percent>=100?"Досягнуто ✓":Math.round(percent)+"%"}</span></div>
+  <div class="track" role="progressbar" aria-label="${esc(g.title)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(percent)}"><div class="fill" style="width:${percent}%"></div></div>
+  <div class="flex"><small>${num(g.current)} / ${num(g.target)} ${esc(g.unit)}</small><div><button class="secondary" data-edit="${g.id}">Оновити</button><button class="danger" data-remove="goals" data-id="${g.id}" aria-label="Видалити ціль">✕</button></div></div>
+  <p class="muted" style="margin-bottom:0">${[25,50,100].map(p=>`${state.awards.some(a=>a.id===`goal-${g.id}-${p}`)?"✓":"○"} ${p}%`).join("　")}</p></article>`;
+ }).join(""):empty("Додайте першу ціль: наприклад, 12 тренувань або 100 км ходьби. Прогрес цілі оновлюється кнопкою «Оновити».");
+}
+function renderBody(){
+ const records=[...state.body].sort((a,b)=>a.date.localeCompare(b.date)),w=weights(),p=state.weightPlan,progress=planProgress();
+ $("weightSummary").textContent=w.length>1?`Від ${fmt(w[0].date)}: ${signed(w.at(-1).weight-w[0].weight)} кг. Порівняно з попереднім записом: ${signed(w.at(-1).weight-w.at(-2).weight)} кг.`:w.length?"Перший запис є. Після наступного вимірювання з’явиться порівняння.":"Запишіть вагу, щоб почати історію.";
+ $("weightChart").innerHTML=w.length>1?weightChart(w):empty("Графік з’явиться після двох записів ваги на різні дати.");
+ $("weightPlan").innerHTML=p?`<div class="callout"><div class="flex"><span>Початок: <b>${num(p.start)} кг</b></span><span>Ціль: <b>${num(p.target)} кг</b></span></div>
+ <div class="track" role="progressbar" aria-label="Шлях до цільової ваги" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progress?.percent||0)}"><div class="fill" style="width:${progress?.percent||0}%"></div></div>
+ <span>${progress?Math.round(progress.percent)+"% шляху · "+(progress.percent>=100?"ціль досягнута ♡":"до цілі "+num(progress.remaining)+" кг"):"Додайте вимірювання після початку цілі."}</span>
+ <p class="muted" style="margin-bottom:0">Початок цілі: ${fmt(p.date)} · нагороди на 25%, 50% і 100%.</p></div>`:
+ `<div class="callout">Спочатку запишіть поточну вагу, потім оберіть бажану. Власний напрямок і комфортний темп.</div>`;
+ const value=(r,k)=>r[k]==null?"—":num(r[k]);
+ $("bodyHistory").innerHTML=records.length?`<table><thead><tr><th>Дата</th><th>Вага, кг</th><th>Груди, см</th><th>Талія, см</th><th>Стегна, см</th><th></th></tr></thead><tbody>${[...records].reverse().map(r=>`<tr><td>${fmt(r.date)}</td><td>${value(r,"weight")}</td><td>${value(r,"chest")}</td><td>${value(r,"waist")}</td><td>${value(r,"hips")}</td><td><button class="danger" data-remove="body" data-id="${r.id}" aria-label="Видалити вимірювання">✕</button></td></tr>`).join("")}</tbody></table>`:empty("Ще немає вимірювань.");
+}
+function weightChart(records){
+ const W=620,H=280,L=60,R=22,T=28,B=48,p=state.weightPlan;
+ const values=records.map(r=>r.weight),range=p?[...values,p.target]:values;
+ const padding=Math.max(.5,(Math.max(...range)-Math.min(...range))*.08);
+ const low=Math.min(...range)-padding,high=Math.max(...range)+padding;
+ const first=new Date(records[0].date+"T12:00:00").getTime();
+ const last=new Date(records.at(-1).date+"T12:00:00").getTime();
+ const y=value=>T+(high-value)/(high-low)*(H-T-B);
+ const points=records.map(r=>({x:L+(new Date(r.date+"T12:00:00").getTime()-first)/(last-first)*(W-L-R),y:y(r.weight),r}));
+ const grid=Array.from({length:4},(_,i)=>{
+  const value=high-i*(high-low)/3,py=y(value);
+  return `<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="#f0dce5"/><text x="${L-8}" y="${py+4}" text-anchor="end" fill="#947685" font-size="12">${num(value)}</text>`;
+ }).join("");
+ return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Вага за датами: від ${num(values[0])} до ${num(values.at(-1))} кг. ${p?"Ціль "+num(p.target)+" кг.":""}">
+ ${grid}${p?`<line x1="${L}" y1="${y(p.target)}" x2="${W-R}" y2="${y(p.target)}" stroke="#aa7ab3" stroke-dasharray="6 5"/><text x="${W-R}" y="${y(p.target)-7}" text-anchor="end" fill="#8f5b98" font-size="12">Ціль ${num(p.target)} кг</text>`:""}
+ <polyline points="${points.map(pt=>pt.x+","+pt.y).join(" ")}" fill="none" stroke="#c65b8a" stroke-width="3" stroke-linejoin="round"/>
+ ${points.map(pt=>`<circle cx="${pt.x}" cy="${pt.y}" r="4" fill="#c65b8a"><title>${fmt(pt.r.date)}: ${num(pt.r.weight)} кг</title></circle>`).join("")}
+ <text x="${L}" y="${H-14}" fill="#947685" font-size="12">${shortDate(records[0].date)}</text>
+ <text x="${W-R}" y="${H-14}" text-anchor="end" fill="#947685" font-size="12">${shortDate(records.at(-1).date)}</text></svg>`;
+}
+function renderActivity(dates,recent,minutes){
+ const totals=dates.map(d=>recent.filter(w=>w.date===d).reduce((s,w)=>s+w.duration,0));
+ const max=Math.max(30,...totals),W=620,H=240,L=42,R=12,T=25,B=42,step=(W-L-R)/7;
+ const bars=totals.map((value,i)=>{
+  const h=value/max*(H-T-B),x=L+i*step+12,y=H-B-h;
+  return `<rect x="${x}" y="${y}" width="${step-24}" height="${h}" rx="7" fill="#d979a0"><title>${fmt(dates[i])}: ${num(value)} хв</title></rect>
+  <text x="${x+(step-24)/2}" y="${y-7}" text-anchor="middle" fill="#a3406c" font-size="12">${num(value)}</text>
+  <text x="${x+(step-24)/2}" y="${H-16}" text-anchor="middle" fill="#947685" font-size="12">${new Date(dates[i]+"T12:00:00").toLocaleDateString("uk-UA",{weekday:"short"})}</text>`;
+ }).join("");
+ $("activityChart").innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Активність за останні сім днів: ${dates.map((d,i)=>shortDate(d)+", "+totals[i]+" хв").join("; ")}"><text x="${L}" y="14" fill="#947685" font-size="12">хвилини</text><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#f0dce5"/>${bars}</svg>`;
+ $("activitySummary").textContent=`За 7 днів: ${recent.length} тренувань · ${num(minutes)} хвилин · ${totals.filter(Boolean).length} днів із записаною активністю.`;
+ $("workouts").innerHTML=state.workouts.length?[...state.workouts].sort((a,b)=>b.date.localeCompare(a.date)).map(w=>`<div class="item flex"><div><h3>${esc(w.type)}</h3><small>${fmt(w.date)} · ${num(w.duration)} хв</small></div><button class="danger" data-remove="workouts" data-id="${w.id}" aria-label="Видалити тренування">✕</button></div>`).join(""):empty("Почніть із першого запису. Прогулянка також рахується.");
+}
+function renderFood(){
+ const meals=state.food.filter(f=>f.date===$("foodDate").value);
+ const calories=meals.reduce((s,f)=>s+(f.calories??0),0),protein=meals.reduce((s,f)=>s+(f.protein??0),0);
+ const incomplete=meals.some(f=>f.calories==null||f.protein==null);
+ $("foodSummary").textContent=`Записано: ${num(calories)} ккал · ${num(protein)} г білка · ${meals.length} прийомів їжі.`+(incomplete?" Підсумок включає лише заповнені показники.":"");
+ $("foodHistory").innerHTML=meals.length?meals.map(f=>`<div class="item flex"><div><span class="badge">${esc(f.meal)}</span><h3 style="margin-top:10px">${esc(f.title)}</h3><small>${f.calories==null?"Калорії не вказані":num(f.calories)+" ккал"} · ${f.protein==null?"Білок не вказаний":num(f.protein)+" г білка"}</small></div><button class="danger" data-remove="food" data-id="${f.id}" aria-label="Видалити прийом їжі">✕</button></div>`).join(""):empty("За цю дату ще немає записів.");
+}
+$("foodDate").onchange=renderFood;
+
+$("goalForm").onsubmit=e=>{
+ e.preventDefault();const f=new FormData(e.target),title=f.get("title").trim(),unit=f.get("unit").trim(),target=Number(f.get("target"));
+ if(!text(title,80)||!text(unit,20)||!finite(target,.000001,1e12)||!validDate(f.get("deadline")))return;
+ state.goals.push({id:uid(),title,unit,target,current:0,deadline:f.get("deadline")});
+ e.target.reset();$("goalDialog").close();save("Ціль збережено ♡");
+};
+$("progressForm").onsubmit=e=>{
+ e.preventDefault();const goal=state.goals.find(g=>g.id===editingId),value=Number(new FormData(e.target).get("value"));
+ if(!goal||!finite(value,0,1e12))return;
+ goal.current=value;$("progressDialog").close();save("Прогрес оновлено");
+};
+$("workoutForm").onsubmit=e=>{
+ e.preventDefault();const f=new FormData(e.target),duration=Number(f.get("duration")),date=f.get("date");
+ if(!finite(duration,1,1440)||!validDate(date)||date>today())return;
+ state.workouts.push({id:uid(),type:f.get("type"),duration,date});
+ e.target.reset();resetDates(e.target);save("Тренування збережено");
+};
+$("bodyForm").onsubmit=e=>{
+ e.preventDefault();const f=new FormData(e.target),record={date:f.get("date")};
+ if(!validDate(record.date)||record.date>today())return;
+ let filled=false;
+ for(const name of ["weight","chest","waist","hips"]){
+  record[name]=f.get(name)===""?null:Number(f.get(name));
+  if(record[name]!==null){
+   if(!finite(record[name],1,name==="weight"?1000:500))return;
+   filled=true;
+  }
+ }
+ if(!filled){notify("Вкажіть вагу або хоча б один обмір.");return;}
+ const existing=state.body.find(r=>r.date===record.date);
+ if(existing){
+  for(const name of ["weight","chest","waist","hips"])if(record[name]!==null)existing[name]=record[name];
+ }else state.body.push({id:uid(),...record});
+ e.target.reset();resetDates(e.target);save("Вимірювання збережено ♡");
+};
+$("weightGoalForm").onsubmit=e=>{
+ e.preventDefault();const target=Number(new FormData(e.target).get("target")),records=weights();
+ if(!records.length){notify("Спочатку запишіть поточну вагу.");return;}
+ const start=records.at(-1).weight;
+ if(!finite(target,1,1000))return;
+ if(target===start){notify("Це ваша поточна вага. Для нової цілі оберіть інше значення.");return;}
+ if(state.weightPlan&&!confirm("Почати нову ціль від останньої ваги? Попередні нагороди залишаться."))return;
+ state.weightPlan={id:uid(),start,target,date:today()};
+ e.target.reset();save("Нову ціль ваги збережено");
+};
+$("foodForm").onsubmit=e=>{
+ e.preventDefault();const f=new FormData(e.target),title=f.get("title").trim(),date=f.get("date");
+ const value=name=>f.get(name)===""?null:Number(f.get(name));
+ const calories=value("calories"),protein=value("protein");
+ if(!text(title,120)||!validDate(date)||date>today()||!optional(calories,0,20000)||!optional(protein,0,2000))return;
+ state.food.push({id:uid(),date,meal:f.get("meal"),title,calories,protein});
+ $("foodDate").value=date;e.target.reset();resetDates(e.target);save("Прийом їжі збережено");
+};
+document.addEventListener("click",e=>{
+ const habit=e.target.closest("[data-habit]");
+ if(habit){
+  const index=Number(habit.dataset.habit),date=today();
+  const values=state.habits[date]||[false,false,false];
+  values[index]=!values[index];state.habits[date]=values;save();return;
+ }
+ const edit=e.target.closest("[data-edit]");
+ if(edit){
+  const g=state.goals.find(g=>g.id===edit.dataset.edit);if(!g)return;
+  editingId=g.id;$("progressForm").elements.value.value=g.current;
+  $("progressForm").elements.value.setAttribute("aria-label","Поточне значення, "+g.unit);
+  $("progressDialog").showModal();return;
+ }
+ const del=e.target.closest("[data-remove]");
+ if(del&&confirm("Видалити цей запис? Отримані нагороди залишаться.")){
+  const collection=del.dataset.remove;
+  if(!["goals","workouts","body","food"].includes(collection))return;
+  state[collection]=state[collection].filter(r=>r.id!==del.dataset.id);save("Запис видалено");
+ }
+});
+
+$("export").onclick=()=>{
+ const blob=new Blob([JSON.stringify({app:"my-rytm",version:2,exportedAt:new Date().toISOString(),data:state},null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="my-rytm-"+today()+".json";document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+ notify("Збережіть файл JSON у «Файли» на iPad.");
+};
+$("import").onclick=()=>$("importFile").click();
+$("importFile").onchange=async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  if(file.size>10*1024*1024)throw Error("Завеликий файл");
+  const raw=JSON.parse(await file.text());
+  const restored=validate(raw.data??raw);
+  if(!confirm("Замінити всі поточні записи даними з цієї копії?"))return;
+  const previous=state;state=restored;
+  try{localStorage.setItem(KEY,JSON.stringify(state));}
+  catch{state=previous;throw Error("Браузер не дозволив збереження");}
+  $("foodDate").value=today();save("Копію відновлено ♡");
+ }catch{
+  notify("Копію не відновлено. Перевірте файл JSON і доступне місце у браузері.");
+ }finally{e.target.value="";}
+};
+
+function connection(){
+ $("connection").textContent=navigator.onLine?"Особистий простір для прогресу":"Без інтернету · записи на пристрої";
+}
+window.addEventListener("online",connection);
+window.addEventListener("offline",connection);
+connection();
+
+const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+$("installStatus").textContent=standalone?"Відкрито як додаток. Зберігайте копії важливих записів.":"На iPad: відкрийте сайт у Safari → «Поділитися» → «На початковий екран».";
+async function prepareOffline(){
+ if(!("serviceWorker" in navigator)||!window.isSecureContext){
+  $("installStatus").textContent+=" Для роботи офлайн потрібен сайт за HTTPS.";
+  return;
+ }
+ try{
+  const registration=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
+  const ready=()=>{
+   $("installStatus").textContent=(standalone?"Додаток встановлено. ":"")+"Готово до роботи без інтернету. Дані зберігаються на пристрої.";
+  };
+  if(registration.active)ready();
+  const worker=registration.installing||registration.waiting;
+  if(worker)worker.addEventListener("statechange",()=>{if(worker.state==="activated")ready();});
+ }catch{
+  $("installStatus").textContent="Попередній перегляд працює. Для встановлення й роботи офлайн розмістіть усі 4 файли разом на HTTPS-сайті та відкрийте його в Safari.";
+ }
+}
+if(!loadError){
+ unlockAwards();
+ try{localStorage.setItem(KEY,JSON.stringify(state));}catch{}
+}
+render();
+if(loadError)notify("Не вдалося прочитати збереження. Автозапис не виконувався. Спробуйте відновити резервну копію.");
+prepareOffline();
+
+let displayedDay=today();
+function refreshDay(){
+ if(displayedDay!==today()){
+  const previous=displayedDay;displayedDay=today();
+  document.querySelectorAll('form input[type="date"]').forEach(input=>{
+   if(input.form.id!=="goalForm"){
+    input.max=today();if(input.value===previous)input.value=today();
+   }
+  });
+  if($("foodDate").value===previous)$("foodDate").value=today();
+  render();
+ }
+}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDay();});
+setInterval(refreshDay,60000);
+</script>
+</body>
+</html>
